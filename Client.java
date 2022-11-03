@@ -1,4 +1,4 @@
-package src;
+
 import java.net.*;
 
 public class Client
@@ -15,6 +15,7 @@ public class Client
 
             DatagramPacket packet = new DatagramPacket(send, send.length, iNet, 9999);
             socket.send(packet);
+            socket.close();
         } catch (Exception e)
         {
             e.printStackTrace();

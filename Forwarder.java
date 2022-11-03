@@ -1,4 +1,4 @@
-package src;
+
 import java.net.*;
 
 public class Forwarder
@@ -18,6 +18,9 @@ public class Forwarder
 
             DatagramPacket f = new DatagramPacket(toForward, toForward.length, iNet, 9998);
             forward.send(f);
+            
+            socket.close();
+            forward.close();
         }   catch (Exception e)
         {
             e.printStackTrace();

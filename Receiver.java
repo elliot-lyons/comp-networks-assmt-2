@@ -1,10 +1,11 @@
-package src;
+
 import java.net.*;
 
 public class Receiver 
 {
     public static void main(String[] args)
     {
+        System.out.println("Go");
         try
         {
             DatagramSocket socket = new DatagramSocket(9998);
@@ -15,6 +16,7 @@ public class Receiver
             String x = new String(packet.getData());
             System.out.println(x);
 
+            socket.close();
         } catch (Exception e)
         {
             e.printStackTrace();
