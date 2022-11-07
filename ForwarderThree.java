@@ -2,13 +2,13 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
-public class ForwarderTwo
+public class ForwarderThree
 {
-    static final int DEFAULT_PORT = 50002;
-    static final int DEFAULT_CLIENT_PORT = 50003;
-    static final int DEFAULT_FOR_PORT = 50004;
-    static final String DEFAULT_CLIENT_NODE = "ClientTwo";
-    static final String DEFAULT_FOR_NODE = "ForwarderThree";
+    static final int DEFAULT_PORT = 50004;
+    static final int DEFAULT_CLIENT_PORT = 50005;
+    // static final int DEFAULT_FOR_PORT = 50004;
+    static final String DEFAULT_CLIENT_NODE = "ClientThree";
+    // static final String DEFAULT_FOR_NODE = "ForwarderThree";
 
     public static void run()
     {
@@ -25,23 +25,6 @@ public class ForwarderTwo
 
             String data = new String(packet.getData());
             System.out.println(data);
-            byte[] theData = packet.getData();
-            byte header = theData[0];
-
-            int head = header;
-
-
-            if (head == 1)            // change to opposite essentially w header/ forward table eventually
-            {
-                System.out.println("Here");
-                nextPort = DEFAULT_FOR_PORT;
-                nextNode = DEFAULT_FOR_NODE;
-            }
-
-            else
-            {
-                System.out.println("No");
-            }
             
             InetSocketAddress nextAddress = new InetSocketAddress(nextNode, nextPort);
             DatagramSocket nextSocket = new DatagramSocket(nextPort);

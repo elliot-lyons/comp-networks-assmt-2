@@ -18,7 +18,17 @@ public class ClientOne
 
             String test = "Hello World!";
 
-            byte[] send = test.getBytes();
+            byte[] beforeSend = test.getBytes();
+
+            byte[] send = new byte[beforeSend.length+1];
+
+            Integer header = 1;
+            send[0] = header.byteValue();
+
+            for (int i = 1; i < send.length; i++)
+            {
+                send[i] = beforeSend[i-1];
+            }
 
             DatagramPacket packet = new DatagramPacket(send, 0, send.length);
             packet.setSocketAddress(toForwarderOne);
