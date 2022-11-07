@@ -1,19 +1,14 @@
+import java.util.*;
+import java.io.*;
 import java.net.*;
 
-public class Client
+public class ClientOne
 {
-
-    public String ip;
-
-    Client(String ip)
+    public static void run()
     {
-        this.ip = ip;
-    }
-
-    public synchronized void run()
-    {
-        try
+        try                                             // send to forwarder
         {
+            String ip = "172.18.0.1";
             DatagramSocket socket = new DatagramSocket();
             String test = "Hello World!";
 
@@ -31,6 +26,6 @@ public class Client
 
     public static void main(String[] args)
     {
-        
+        run();
     }
 }
