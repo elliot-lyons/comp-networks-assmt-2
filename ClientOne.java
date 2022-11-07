@@ -4,18 +4,25 @@ import java.net.*;
 
 public class ClientOne
 {
+    static final int DEFAULT_SRC_PORT = 50000;
+	static final int DEFAULT_DST_PORT = 50001;
+	static final String DEFAULT_DST_NODE = "ForwarderOne";
+	InetSocketAddress dstAddress;
+
     public static void run()
     {
         try                                             // send to forwarder
         {
-            String ip = "172.18.0.1";
-            DatagramSocket socket = new DatagramSocket();
+            InetSocketAddress toForwarderOne = new InetSocketAddress(DEFAULT_DST_NODE, DEFAULT_DST_PORT);
+            DatagramSocket socket = new DatagramSocket(DEFAULT_SRC_PORT);
+
             String test = "Hello World!";
 
             byte[] send = test.getBytes();
-            Inet4Address iNet = (Inet4Address) Inet4Address.getByName(ip);
 
-            DatagramPacket packet = new DatagramPacket(send, send.length, iNet, 9999);
+            DatagramPacket packet = new DatagramPacket(send, 0, send.length);
+            packet.setSocketAddress(toForwarderOne);
+            
             socket.send(packet);
             socket.close();
         } catch (Exception e)

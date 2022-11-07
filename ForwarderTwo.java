@@ -4,17 +4,18 @@ import java.net.*;
 
 public class ForwarderTwo
 {
+    static final int DEFAULT_PORT = 50001;
+    static final int DEFAULT_FOR_PORT = 50002;
+
     public static void run()
     {
         try
         {
-            String ip = "172.19.0.2";
-            DatagramSocket socket = new DatagramSocket(9998);
+            DatagramSocket socket = new DatagramSocket(DEFAULT_PORT);
             byte[] sent = new byte[1024];
             DatagramPacket packet = new DatagramPacket(sent, sent.length);
             socket.receive(packet);
 
-            Inet4Address iNet = (Inet4Address) Inet4Address.getByName(ip);
             DatagramSocket forward = new DatagramSocket();
             byte[] toForward = packet.getData();
 
