@@ -25,4 +25,4 @@ ClientThree     |    50005
 * Send message to node when it's not wanted
 * Send acknowledgements
 
-* Error handling to be done with max amounts in client one *
+*Error handling to be done with max amounts in client one.*
