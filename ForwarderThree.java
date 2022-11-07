@@ -24,7 +24,6 @@ public class ForwarderThree
             String nextNode = DEFAULT_CLIENT_NODE;
 
             String data = new String(packet.getData());
-            System.out.println(data);
             
             InetSocketAddress nextAddress = new InetSocketAddress(nextNode, nextPort);
             DatagramSocket nextSocket = new DatagramSocket(nextPort);

@@ -24,23 +24,22 @@ public class ForwarderTwo
             String nextNode = DEFAULT_CLIENT_NODE;
 
             String data = new String(packet.getData());
-            System.out.println(data);
             byte[] theData = packet.getData();
             byte header = theData[0];
 
             int head = header;
 
 
-            if (head == 1)            // change to opposite essentially w header/ forward table eventually
+            if (head == 1)            // forward table eventually
             {
-                System.out.println("Here");
+                System.out.println("Withdrawal wanted.");
                 nextPort = DEFAULT_FOR_PORT;
                 nextNode = DEFAULT_FOR_NODE;
             }
 
             else
             {
-                System.out.println("No");
+                System.out.println("Deposit wanted.");
             }
             
             InetSocketAddress nextAddress = new InetSocketAddress(nextNode, nextPort);

@@ -13,7 +13,35 @@ public class ClientTwo
             DatagramPacket packet = new DatagramPacket(sent, sent.length);
             socket.receive(packet);
             socket.close();
-            System.out.println("" + (new String(packet.getData())));
+
+            byte[] res = packet.getData();
+            byte[] data = new byte[res.length-1];
+
+            for (int i = 0; i < data.length; i++)
+            {
+                data[i] = res[i+1];
+            }
+
+            int value = 0;
+            boolean okVal = true;
+            
+            for (int i = 0; i < data.length && okVal; i++) 
+            {
+                int prev = value;
+                byte b = data[i];
+                value = (value << 8) + (b & 0xFF);
+                
+                if (value > 30000)
+                {
+                    value = prev;
+                    okVal = false;
+                }
+            }
+
+            int bal = 10000 + value;
+
+            System.out.println("$" + value + " withdrawn. New balance: $" + bal);
+
         }   catch (Exception e)
         {
             e.printStackTrace();
