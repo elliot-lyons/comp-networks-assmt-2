@@ -3,23 +3,26 @@ import java.net.*;
 
 public class ClientTwo 
 {
-    public static void main(String[] args)
+    static final int DEFAULT_PORT = 50003;
+
+    public static void run()
     {
-        System.out.println("Go");
         try
         {
-            DatagramSocket socket = new DatagramSocket(9997);
+            DatagramSocket socket = new DatagramSocket(DEFAULT_PORT);
             byte[] sent = new byte[1024];
             DatagramPacket packet = new DatagramPacket(sent, sent.length);
             socket.receive(packet);
-
-            String x = new String(packet.getData());
-            System.out.println(x);
-
             socket.close();
-        } catch (Exception e)
+            System.out.println("" + (new String(packet.getData())));
+        }   catch (Exception e)
         {
             e.printStackTrace();
-        }   
+        }
+    }
+
+    public static void main(String[] args)
+    {
+       run(); 
     }    
 }
