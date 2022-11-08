@@ -12,6 +12,7 @@ public class ForwarderOne
 
     public static void run()
     {
+        System.out.println("Waiting for contact...");
         try
         {
             DatagramSocket socket = new DatagramSocket(DEFAULT_PORT);
@@ -20,15 +21,18 @@ public class ForwarderOne
             socket.receive(packet);
             socket.close();
 
-            System.out.println("" + (new String(packet.getData())));
+            System.out.println("Packet received.");
             
             InetSocketAddress toForwarderTwo = new InetSocketAddress(DEFAULT_DST_NODE, DEFAULT_FOR_PORT);
             DatagramSocket forward = new DatagramSocket(DEFAULT_FOR_PORT);
             
             packet.setSocketAddress(toForwarderTwo);
             
+            System.out.println("Forwarding packet.");
             forward.send(packet);
             forward.close();
+
+            System.out.println("Program completed.");
         }   catch (Exception e)
         {
             e.printStackTrace();

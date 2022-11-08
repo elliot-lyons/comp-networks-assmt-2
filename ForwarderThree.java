@@ -12,6 +12,8 @@ public class ForwarderThree
 
     public static void run()
     {
+        System.out.println("Waiting for contact...");
+        
         try
         {
             DatagramSocket socket = new DatagramSocket(DEFAULT_PORT);
@@ -20,10 +22,12 @@ public class ForwarderThree
             socket.receive(packet);
             socket.close();
 
+            System.out.println("Packet received.");
+
             int nextPort = DEFAULT_CLIENT_PORT;
             String nextNode = DEFAULT_CLIENT_NODE;
 
-            String data = new String(packet.getData());
+            System.out.println("Forwarding packet.");
             
             InetSocketAddress nextAddress = new InetSocketAddress(nextNode, nextPort);
             DatagramSocket nextSocket = new DatagramSocket(nextPort);
@@ -32,6 +36,9 @@ public class ForwarderThree
             
             nextSocket.send(packet);
             nextSocket.close();
+
+            System.out.println("Packet sent.");
+            System.out.println("Program completed.");
         }   catch (Exception e)
         {
             e.printStackTrace();

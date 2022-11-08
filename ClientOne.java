@@ -21,11 +21,11 @@ public class ClientOne
             Integer header = 1;
             int toSend = 0;
 
-            System.out.println("Account balance = $10000");
+            System.out.println("Account balance = $10000.");
 
             do
             {
-                System.out.println("" + (error ? "Error. " : "") + "Press 1 to withdraw funds or 2 to add funds to your account");
+                System.out.println("" + (error ? "Error. " : "") + "Press 1 to withdraw funds or 2 to add funds to your account.");
                 String x = scanner.nextLine();
 
                 try
@@ -36,6 +36,11 @@ public class ClientOne
                     {
                         header = y;
                         error = false;
+                    }
+
+                    else
+                    {
+                        error = true;
                     }
                 }
 
@@ -48,22 +53,23 @@ public class ClientOne
 
             do
             {
-                System.out.println("" + (error ? "Error. " : "") + "Input amount to add or withdraw");
+                System.out.println("" + (error ? "Error. " : "") + "Input amount to add or withdraw.");
                 String x = scanner.nextLine();
 
                 try
                 {
                     toSend = Integer.parseInt(x);
 
-                    if (toSend > 10000 && header == 2)
+                    if (toSend > 10000 && header == 1)
                     {
                         System.out.println("Insufficient funds.");
                         error = true;
                     }
 
-                    else if (header == 1 && toSend > 30000)
+                    else if (header == 2 && toSend > 30000)
                     {
-                        System.out.println("Max deposit = $30000");
+                        System.out.println("Max deposit = $30000.");
+                        error = true;
                     }
 
                     else
@@ -102,6 +108,8 @@ public class ClientOne
             
             socket.send(packet);
             socket.close();
+
+            System.out.println("Packet sent.");
         } catch (Exception e)
         {
             e.printStackTrace();
