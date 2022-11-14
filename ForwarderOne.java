@@ -6,8 +6,8 @@ public class ForwarderOne
 {
   
     static final int DEFAULT_PORT = 50001;
-    static final int DEFAULT_FOR_PORT = 50002;
-	static final String DEFAULT_DST_NODE = "ForwarderTwo";
+    static final int DEFAULT_FOR_PORT = 50006;
+	static final String DEFAULT_DST_NODE = "Controller";
 	InetSocketAddress dstAddress;
 
     public static void run()
@@ -23,13 +23,41 @@ public class ForwarderOne
 
             System.out.println("Packet received.");
             
-            InetSocketAddress toForwarderTwo = new InetSocketAddress(DEFAULT_DST_NODE, DEFAULT_FOR_PORT);
-            DatagramSocket forward = new DatagramSocket(DEFAULT_FOR_PORT);
+            InetSocketAddress toController = new InetSocketAddress(DEFAULT_DST_NODE, DEFAULT_FOR_PORT);
+            DatagramSocket controller = new DatagramSocket(DEFAULT_FOR_PORT);
+
+            byte[] control = new byte[1];
+            control[0] = sent[0];
+
+            DatagramPacket xPacket = new DatagramPacket(control, 0, control.length);
             
-            packet.setSocketAddress(toForwarderTwo);
-            
-            System.out.println("Forwarding packet.");
+            xPacket.setSocketAddress(toController);
+            System.out.println("Sending to control");
+            controller.send(xPacket);
+            controller.receive(xPacket);
+            System.out.println("Received from control");
+            controller.close();
+
+            byte[] received = xPacket.getData();
+
+            int nextPort = received[0];
+
+            byte[] r = new byte[received.length-1];
+
+            for (int i = 0; i < r.length; i++)
+            {
+                r[i] = received[i+1];
+            }
+
+            String nextNode = r.toString();
+
+            InetSocketAddress toForwarder = new InetSocketAddress(nextNode, nextPort);
+            DatagramSocket forward = new DatagramSocket(nextPort);
+
+            packet.setSocketAddress(toForwarder);
             forward.send(packet);
+
+            System.out.println("Forwarding packet.");
             forward.close();
 
             System.out.println("Program completed.");
