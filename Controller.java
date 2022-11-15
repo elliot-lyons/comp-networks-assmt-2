@@ -147,17 +147,26 @@ public class Controller
                 }
 
                 byte[] x = nextNode.getBytes();
-                System.out.println("X: " + x.toString());
-                byte[] forwarder = new byte[x.length+1];
-                forwarder[0] = nextAddress.byteValue();
-                System.out.println("NA: " + nextAddress);
-                nextAddress++;
-                System.out.println("f0: " + (nextAddress).byteValue());
+                String next = "" + nextAddress;
+                System.out.println("N: " + Integer.parseInt(next));
+                byte[] y = next.getBytes();
                 
-                for (int i = 0; i < x.length; i++)
+                byte[] forwarder = new byte[x.length + y.length + 1];
+
+                forwarder[0] = (byte) x.length;
+
+                int index = 1;
+                
+                while (index <= x.length)
                 {
-                    forwarder[i+1] = x[i];
-                    System.out.println("F[i]: " + forwarder[i+1]);
+                    forwarder[index] = x[index - 1];
+                    index++;
+                }
+
+                while (index <= x.length + y.length)
+                {
+                    forwarder[index] = y[index - x.length - 1];
+                    index++;
                 }
 
                 System.out.println(forwarder.length);

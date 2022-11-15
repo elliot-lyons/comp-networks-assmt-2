@@ -43,11 +43,9 @@ public class ForwarderOne
 
             byte[] received = yPacket.getData();
 
-            int nextPort = received[0];
-            System.out.println("Port: " + nextPort);
-            System.out.println("Rec lec" + received.length);
+            int nextNodeLength = received[0];
 
-            byte[] r = new byte[received.length-1];
+            byte[] r = new byte[nextNodeLength];
 
             for (int i = 0; i < r.length; i++)
             {
@@ -56,6 +54,18 @@ public class ForwarderOne
 
             String nextNode = new String(r);
             System.out.println("Node: " + nextNode);
+
+            r = new byte[received.length - 1 - nextNodeLength];
+
+            for (int i = 0; i < r.length; i++)
+            {
+                r[i] = received[i + 1 + nextNodeLength];
+            }
+
+            String next = new String(r);
+            System.out.println("Next: " + next);
+            int nextPort =  Integer.parseInt(next);
+            System.out.println("Port: " + nextPort);
 
             InetSocketAddress toForwarder = new InetSocketAddress(nextNode, nextPort);
             DatagramSocket forward = new DatagramSocket(nextPort);
