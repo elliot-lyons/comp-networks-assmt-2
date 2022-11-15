@@ -34,13 +34,18 @@ public class ForwarderOne
             xPacket.setSocketAddress(toController);
             System.out.println("Sending to control");
             controller.send(xPacket);
-            controller.receive(xPacket);
+
+            byte[] fromControl = new byte[1024];
+            DatagramPacket yPacket = new DatagramPacket(fromControl, fromControl.length);
+            controller.receive(yPacket);
             System.out.println("Received from control");
             controller.close();
 
-            byte[] received = xPacket.getData();
+            byte[] received = yPacket.getData();
 
             int nextPort = received[0];
+            System.out.println("Port: " + nextPort);
+            System.out.println("Rec lec" + received.length);
 
             byte[] r = new byte[received.length-1];
 
@@ -49,7 +54,8 @@ public class ForwarderOne
                 r[i] = received[i+1];
             }
 
-            String nextNode = r.toString();
+            String nextNode = new String(r);
+            System.out.println("Node: " + nextNode);
 
             InetSocketAddress toForwarder = new InetSocketAddress(nextNode, nextPort);
             DatagramSocket forward = new DatagramSocket(nextPort);

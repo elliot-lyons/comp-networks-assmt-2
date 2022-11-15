@@ -85,7 +85,7 @@ public class Controller
                 System.out.println("Receieved.");
 
                 byte[] data = fromForwarder.getData();
-                int nextAddress = 0;
+                Integer nextAddress = 0;
                 String nextNode = "";
 
                 switch (data[0])
@@ -147,15 +147,24 @@ public class Controller
                 }
 
                 byte[] x = nextNode.getBytes();
+                System.out.println("X: " + x.toString());
                 byte[] forwarder = new byte[x.length+1];
-                forwarder[0] = (byte) nextAddress;
+                forwarder[0] = nextAddress.byteValue();
+                System.out.println("NA: " + nextAddress);
+                nextAddress++;
+                System.out.println("f0: " + (nextAddress).byteValue());
                 
                 for (int i = 0; i < x.length; i++)
                 {
                     forwarder[i+1] = x[i];
+                    System.out.println("F[i]: " + forwarder[i+1]);
                 }
 
+                System.out.println(forwarder.length);
+
+                System.out.println(forwarder.toString());
                 DatagramPacket packet = new DatagramPacket(forwarder, 0, forwarder.length);
+                packet.setSocketAddress(fromForwarder.getSocketAddress());
                 socket.send(packet);
 
                 socket.close();
