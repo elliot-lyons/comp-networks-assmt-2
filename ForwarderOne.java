@@ -5,8 +5,8 @@ import java.net.*;
 public class ForwarderOne 
 {
   
-    static final int DEFAULT_PORT = 50001;
-    static final int DEFAULT_FOR_PORT = 50006;
+    static final int DEFAULT_PORT = 1;
+    static final int DEFAULT_FOR_PORT = 6;
 	static final String DEFAULT_DST_NODE = "Controller";
 	InetSocketAddress dstAddress;
 
@@ -43,28 +43,18 @@ public class ForwarderOne
 
             byte[] received = yPacket.getData();
 
-            int nextNodeLength = received[0];
-
-            byte[] r = new byte[nextNodeLength];
+            byte[] r = new byte[received.length - 1];
 
             for (int i = 0; i < r.length; i++)
             {
                 r[i] = received[i+1];
             }
 
+            int nextPort = received[0];
+
             String nextNode = new String(r);
             System.out.println("Node: " + nextNode);
 
-            r = new byte[received.length - 1 - nextNodeLength];
-
-            for (int i = 0; i < r.length; i++)
-            {
-                r[i] = received[i + 1 + nextNodeLength];
-            }
-
-            String next = new String(r);
-            System.out.println("Next: " + next);
-            int nextPort =  Integer.parseInt(next);
             System.out.println("Port: " + nextPort);
 
             InetSocketAddress toForwarder = new InetSocketAddress(nextNode, nextPort);

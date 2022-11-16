@@ -1,19 +1,18 @@
-# Assignment 2
+# Assignment 2: Flow Forwarding
 ## Module: CSU33031
 
-Code for Assignment 2: **Flow Forwarding**
 
-
-## Basic Forward Table (at current stage)
+## Forward Table (held by Controller)
 
    Container    |  Port Number
 --------------- | -------------
-ClientOne       |    50000
-ForwarderOne    |    50001
-ForwarderTwo    |    50002
-ClientTwo       |    50003
-ForwarderThree  |    50004
-ClientThree     |    50005
+ClientOne       |      0
+ForwarderOne    |      1
+ForwarderTwo    |      2
+ClientTwo       |      3
+ForwarderThree  |      4
+ClientThree     |      5
+Controller      |      6
 
 
 ## TODO
@@ -21,9 +20,11 @@ ClientThree     |    50005
 * ~~Establish internetwork communication~~
 * ~~Error handling to be done with max amounts in client one~~
 * ~~Send message to node when it's not wanted~~
-* ~~Add user ability to request to send to specific client~~ (kind of)
-    * Details of where it's going lie in header?
+* ~~Add user ability to request to send to specific client~~
+    * ~~Details of where it's going lie in header~~
+* ~~Add routing table~~
+* ~~Add controller~~
 
-* Add routing tables
-* Add controller
 * Send acknowledgements
+    * ~~Timeouts?~~
+* Inheritance

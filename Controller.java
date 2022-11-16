@@ -6,15 +6,15 @@ public class Controller
 {
     static boolean run = true;
     
-    static final int FORWARDER_ONE = 50001;
-    static final int FORWARDER_TWO = 50002;
-    static final int FORWARDER_THREE = 50004;
+    static final int FORWARDER_ONE = 1;
+    static final int FORWARDER_TWO = 2;
+    static final int FORWARDER_THREE = 4;
 
-    static final int CLIENT_ONE = 50000;
-    static final int CLIENT_TWO = 50003;
-    static final int CLIENT_THREE = 50005;
+    static final int CLIENT_ONE = 0;
+    static final int CLIENT_TWO = 3;
+    static final int CLIENT_THREE = 5;
     
-    static final int CONTROLLER = 50006;
+    static final int CONTROLLER = 6;
 
     public static void run()
     {
@@ -85,31 +85,15 @@ public class Controller
                 System.out.println("Receieved.");
 
                 byte[] data = fromForwarder.getData();
-                Integer nextAddress = 0;
+                int dest = data[0];
+                int nextAddress = -1;
                 String nextNode = "";
 
-                switch (data[0])
+                switch (current)
                 {
-                    case (0):
-                    {
-                        if (current == 0)
-                        {
-                            nextAddress = CLIENT_ONE;
-                            nextNode = "ClientOne";
-                        }
-
-                        else
-                        {
-                            nextAddress = FORWARDER_ONE;
-                            nextNode = "ForwarderOne";
-                        }
-
-                        break;
-                    }
-
                     case (1):
                     {
-                        if (current == 1)
+                        if (dest == 1)
                         {
                             nextAddress = CLIENT_TWO;
                             nextNode = "ClientTwo";
@@ -117,15 +101,15 @@ public class Controller
 
                         else
                         {
-                            nextAddress = FORWARDER_TWO;
-                            nextNode = "ForwarderTwo";
+                            nextAddress = FORWARDER_THREE;
+                            nextNode = "ForwarderThree";
                         }
                         break;
                     }
 
                     case (2):
                     {
-                        if (current == 2)
+                        if (dest == 2)
                         {
                             nextAddress = CLIENT_THREE;
                             nextNode = "ClientThree";
@@ -133,8 +117,7 @@ public class Controller
 
                         else
                         {
-                            nextAddress = FORWARDER_THREE;
-                            nextNode = "ForwarderThree";
+                            System.out.println("Error");
                         }
 
                         break;
@@ -142,18 +125,17 @@ public class Controller
 
                     default:
                     {
-                        System.out.println("Error");
+                        nextAddress = FORWARDER_TWO;
+                        nextNode = "ForwarderTwo";
                     }
                 }
 
                 byte[] x = nextNode.getBytes();
-                String next = "" + nextAddress;
-                System.out.println("N: " + Integer.parseInt(next));
-                byte[] y = next.getBytes();
+                System.out.println("N: " + (byte) nextAddress);
                 
-                byte[] forwarder = new byte[x.length + y.length + 1];
+                byte[] forwarder = new byte[x.length  + 1];
 
-                forwarder[0] = (byte) x.length;
+                forwarder[0] = (byte) nextAddress;
 
                 int index = 1;
                 
@@ -163,15 +145,6 @@ public class Controller
                     index++;
                 }
 
-                while (index <= x.length + y.length)
-                {
-                    forwarder[index] = y[index - x.length - 1];
-                    index++;
-                }
-
-                System.out.println(forwarder.length);
-
-                System.out.println(forwarder.toString());
                 DatagramPacket packet = new DatagramPacket(forwarder, 0, forwarder.length);
                 packet.setSocketAddress(fromForwarder.getSocketAddress());
                 socket.send(packet);

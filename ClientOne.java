@@ -4,8 +4,8 @@ import java.net.*;
 
 public class ClientOne
 {
-    static final int DEFAULT_SRC_PORT = 50000;
-	static final int DEFAULT_DST_PORT = 50001;
+    static final int DEFAULT_SRC_PORT = 0;
+	static final int DEFAULT_DST_PORT = 1;
 	static final String DEFAULT_DST_NODE = "ForwarderOne";
 	InetSocketAddress dstAddress;
 
@@ -32,9 +32,15 @@ public class ClientOne
                 {
                     int y = Integer.parseInt(x);
                     
-                    if (y == 1 || y == 2)
+                    if (y == 1)
                     {
-                        header = y;
+                        header = 2;
+                        error = false;
+                    }
+
+                    else if (y == 2)
+                    {
+                        header = 1;
                         error = false;
                     }
 
