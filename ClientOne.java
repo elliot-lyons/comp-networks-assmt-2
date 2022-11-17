@@ -15,6 +15,7 @@ public class ClientOne
         {
             InetSocketAddress toForwarderOne = new InetSocketAddress(DEFAULT_DST_NODE, DEFAULT_DST_PORT);
             DatagramSocket socket = new DatagramSocket(DEFAULT_SRC_PORT);
+            socket.setSoTimeout(10);
 
             Scanner scanner = new Scanner(System.in);
             boolean error = false;
@@ -113,10 +114,19 @@ public class ClientOne
             packet.setSocketAddress(toForwarderOne);
             
             socket.send(packet);
-            socket.close();
-
             System.out.println("Packet sent.");
-        } catch (Exception e)
+
+            byte[] ack = new byte[1024];
+            DatagramPacket zPacket = new DatagramPacket(ack, ack.length);
+            socket.receive(zPacket);
+            byte[] a = zPacket.getData();
+
+            System.out.println("Response received: " + new String(a));
+        } catch (SocketTimeoutException exc)
+        {
+            System.out.println("Timeouts occurred. Restart application.");
+        } 
+        catch (Exception e)
         {
             e.printStackTrace();
         }

@@ -15,58 +15,11 @@ public class Controller
     static final int CLIENT_THREE = 5;
     
     static final int CONTROLLER = 6;
+    static boolean send = false;
 
     public static void run()
     {
-        // while (run)
-        // {
-            // try
-            // {
-            //     DatagramSocket socket = new DatagramSocket(ONE);
-            //     byte[] sent = new byte[1024];
-            //     DatagramPacket packet = new DatagramPacket(sent, sent.length);
-            //     socket.receive(packet);
-            //     byte[] data = packet.getData();
-            //     byte[] forwarder = new byte[1];
-            //     forwarder[0] = (byte) ONE;
-
-            //     switch (data[0])
-            //     {
-            //         case (0):
-            //         {
-            //             break;
-            //         }
-
-            //         case (1):
-            //         {
-            //             forwarder[0] = (byte) TWO;
-            //             break;
-            //         }
-
-            //         case (2):
-            //         {
-            //             forwarder[0] = (byte) THREE;
-            //             break;
-            //         }
-
-            //         default:
-            //         {
-            //             System.out.println("Error");
-            //         }
-            //     }
-
-            //     packet = new DatagramPacket(forwarder, 0, forwarder.length);
-            //     socket.send(packet);
-
-            //     socket = new 
-                
-            // } catch (Exception e)
-            // {
-            //     e.printStackTrace();
-            // }
-
-
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 3 && !send; i++)
         {
             receive(i);
         }
@@ -78,6 +31,7 @@ public class Controller
             {
                 System.out.println("Waiting for contact...");
                 DatagramSocket socket = new DatagramSocket(CONTROLLER);
+                socket.setSoTimeout(30*1000);
                 byte[] sent = new byte[1024];
                 DatagramPacket fromForwarder = new DatagramPacket(sent, sent.length);
                 socket.receive(fromForwarder);
@@ -97,6 +51,7 @@ public class Controller
                         {
                             nextAddress = CLIENT_TWO;
                             nextNode = "ClientTwo";
+                            send = true;
                         }
 
                         else
@@ -113,6 +68,7 @@ public class Controller
                         {
                             nextAddress = CLIENT_THREE;
                             nextNode = "ClientThree";
+                            send = true;
                         }
 
                         else
@@ -131,7 +87,6 @@ public class Controller
                 }
 
                 byte[] x = nextNode.getBytes();
-                System.out.println("N: " + (byte) nextAddress);
                 
                 byte[] forwarder = new byte[x.length  + 1];
 
@@ -150,7 +105,13 @@ public class Controller
                 socket.send(packet);
 
                 socket.close();
-            } catch (Exception e)
+            } catch (SocketTimeoutException exc)
+            {
+                System.out.println("Timeouts occurred. Restart application.");
+                send = true;
+            } 
+            
+            catch (Exception e)
             {
                 e.printStackTrace();
             }

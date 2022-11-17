@@ -11,12 +11,11 @@ public class ClientThree
         try
         {
             DatagramSocket socket = new DatagramSocket(DEFAULT_PORT);
-            socket.setSoTimeout(1000*20);
+            socket.setSoTimeout(1000*10);
 
             byte[] sent = new byte[1024];
             DatagramPacket packet = new DatagramPacket(sent, sent.length);
             socket.receive(packet);
-            socket.close();
 
             System.out.println("Packet received.");
             
@@ -46,8 +45,15 @@ public class ClientThree
                 }
 
                 int bal = 10000 - value;
+                
+                String response = "$" + value + " withdrawn. New balance: $" + bal + ".";
+                System.out.println(response + " Responding to client.");
 
-                System.out.println("$" + value + " withdrawn. New balance: $" + bal + ".");
+                byte[] toClient = response.getBytes();
+                DatagramPacket toC = new DatagramPacket(toClient, toClient.length);
+                toC.setSocketAddress(packet.getSocketAddress());
+                socket.send(toC);
+                
         } catch (SocketTimeoutException e)
         {
             System.out.println("Timeout occurred. Deposit wanted.");
