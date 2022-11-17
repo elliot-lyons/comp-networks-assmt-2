@@ -2,25 +2,25 @@ import java.net.*;
 
 public class ClientThree 
 {
-    static final int DEFAULT_PORT = 50005;
+    static final int DEFAULT_PORT = 5;
 
     public static void run()
     {
         System.out.println("Waiting for contact...");
+    
         try
         {
             DatagramSocket socket = new DatagramSocket(DEFAULT_PORT);
+            socket.setSoTimeout(1000*10);
+
             byte[] sent = new byte[1024];
             DatagramPacket packet = new DatagramPacket(sent, sent.length);
             socket.receive(packet);
-            socket.close();
 
             System.out.println("Packet received.");
             
-            byte[] res = packet.getData();
+                byte[] res = packet.getData();
             
-            if (res[0] == 1)
-            {
                 byte[] data = new byte[res.length-1];
 
                 for (int i = 0; i < data.length; i++)
@@ -30,7 +30,7 @@ public class ClientThree
 
                 int value = 0;
                 boolean okVal = true;
-            
+
                 for (int i = 0; i < data.length && okVal; i++) 
                 {
                     int prev = value;
@@ -43,23 +43,28 @@ public class ClientThree
                         okVal = false;
                     }
                 }
-            
+
                 int bal = 10000 - value;
+                
+                String response = "$" + value + " withdrawn. New balance: $" + bal + ".";
+                System.out.println(response + " Responding to client.");
 
-                System.out.println("$" + value + " withdrawn. New balance: $" + bal + ".");
-            }
+                byte[] toClient = response.getBytes();
+                DatagramPacket toC = new DatagramPacket(toClient, toClient.length);
+                toC.setSocketAddress(packet.getSocketAddress());
+                socket.send(toC);
+                
+        } catch (SocketTimeoutException e)
+        {
+            System.out.println("Timeout occurred. Deposit wanted.");
+        }
 
-            else
-            {
-                System.out.println("Deposit wanted.");
-            }
-
-            System.out.println("Program completed.");
-
-        }   catch (Exception e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
+
+        System.out.println("Program completed.");
     }
 
     public static void main(String[] args)

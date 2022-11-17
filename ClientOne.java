@@ -4,8 +4,8 @@ import java.net.*;
 
 public class ClientOne
 {
-    static final int DEFAULT_SRC_PORT = 50000;
-	static final int DEFAULT_DST_PORT = 50001;
+    static final int DEFAULT_SRC_PORT = 0;
+	static final int DEFAULT_DST_PORT = 1;
 	static final String DEFAULT_DST_NODE = "ForwarderOne";
 	InetSocketAddress dstAddress;
 
@@ -15,6 +15,7 @@ public class ClientOne
         {
             InetSocketAddress toForwarderOne = new InetSocketAddress(DEFAULT_DST_NODE, DEFAULT_DST_PORT);
             DatagramSocket socket = new DatagramSocket(DEFAULT_SRC_PORT);
+            socket.setSoTimeout(10);
 
             Scanner scanner = new Scanner(System.in);
             boolean error = false;
@@ -32,9 +33,15 @@ public class ClientOne
                 {
                     int y = Integer.parseInt(x);
                     
-                    if (y == 1 || y == 2)
+                    if (y == 1)
                     {
-                        header = y;
+                        header = 2;
+                        error = false;
+                    }
+
+                    else if (y == 2)
+                    {
+                        header = 1;
                         error = false;
                     }
 
@@ -107,10 +114,19 @@ public class ClientOne
             packet.setSocketAddress(toForwarderOne);
             
             socket.send(packet);
-            socket.close();
-
             System.out.println("Packet sent.");
-        } catch (Exception e)
+
+            byte[] ack = new byte[1024];
+            DatagramPacket zPacket = new DatagramPacket(ack, ack.length);
+            socket.receive(zPacket);
+            byte[] a = zPacket.getData();
+
+            System.out.println("Response received: " + new String(a));
+        } catch (SocketTimeoutException exc)
+        {
+            System.out.println("Timeouts occurred. Restart application.");
+        } 
+        catch (Exception e)
         {
             e.printStackTrace();
         }
