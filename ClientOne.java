@@ -15,7 +15,7 @@ public class ClientOne
         {
             InetSocketAddress toForwarderOne = new InetSocketAddress(DEFAULT_DST_NODE, DEFAULT_DST_PORT);
             DatagramSocket socket = new DatagramSocket(DEFAULT_SRC_PORT);
-            socket.setSoTimeout(10);
+            socket.setSoTimeout(20*1000);
 
             Scanner scanner = new Scanner(System.in);
             boolean error = false;

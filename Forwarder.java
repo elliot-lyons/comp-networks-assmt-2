@@ -13,16 +13,17 @@ public class Forwarder
         try
         {
             DatagramSocket socket = new DatagramSocket(defaultPort);
-            socket.setSoTimeout(10*1000);
+            socket.setSoTimeout(20*1000);
             byte[] sent = new byte[1024];
             DatagramPacket packet = new DatagramPacket(sent, sent.length);
             socket.receive(packet);
             SocketAddress original = packet.getSocketAddress();
 
-            System.out.println("Packet received. " + packet.getSocketAddress());
+            System.out.println("Packet received.");
             
             InetSocketAddress toController = new InetSocketAddress(DEFAULT_DST_NODE, DEFAULT_FOR_PORT);
             DatagramSocket controller = new DatagramSocket(DEFAULT_FOR_PORT);
+            controller.setSoTimeout(1);
 
             byte[] control = new byte[1];
             control[0] = sent[0];
@@ -57,6 +58,7 @@ public class Forwarder
 
             InetSocketAddress toForwarder = new InetSocketAddress(nextNode, nextPort);
             DatagramSocket forward = new DatagramSocket(nextPort);
+            forward.setSoTimeout(15*1000);
 
             packet.setSocketAddress(toForwarder);
             forward.send(packet);
