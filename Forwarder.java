@@ -65,7 +65,7 @@ public class Forwarder
 
             System.out.println("Forwarding packet.");
             
-            byte[] ack = new byte[1024];
+            byte[] ack = new byte[1024];                    // waits for acknowledgement
             DatagramPacket zPacket = new DatagramPacket(ack, ack.length);
             forward.receive(zPacket);
             byte[] a = zPacket.getData();

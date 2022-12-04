@@ -1,5 +1,4 @@
 import java.util.*;
-import java.io.*;
 import java.net.*;
 
 public class ClientOne
@@ -24,7 +23,7 @@ public class ClientOne
 
             System.out.println("Account balance = $10000.");
 
-            do
+            do          // error handling user input
             {
                 System.out.println("" + (error ? "Error. " : "") + "Press 1 to withdraw funds or 2 to add funds to your account.");
                 String x = scanner.nextLine();
@@ -116,10 +115,13 @@ public class ClientOne
             socket.send(packet);
             System.out.println("Packet sent.");
 
-            byte[] ack = new byte[1024];
+            byte[] ack = new byte[1024];            // waiting for ack
             DatagramPacket zPacket = new DatagramPacket(ack, ack.length);
             socket.receive(zPacket);
             byte[] a = zPacket.getData();
+
+            scanner.close();
+            socket.close();
 
             System.out.println("Response received: " + new String(a));
         } catch (SocketTimeoutException exc)

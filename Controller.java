@@ -1,5 +1,3 @@
-import java.util.*;
-import java.io.*;
 import java.net.*;
 
 public class Controller 
@@ -39,11 +37,11 @@ public class Controller
                 System.out.println("Receieved.");
 
                 byte[] data = fromForwarder.getData();
-                int dest = data[0];
+                int dest = data[0];         // the header determines where the packet needs to go
                 int nextAddress = -1;
                 String nextNode = "";
 
-                switch (current)
+                switch (current)        // forwarder determining next step for forwarders
                 {
                     case (1):
                     {
@@ -73,7 +71,7 @@ public class Controller
 
                         else
                         {
-                            System.out.println("Error");
+                            System.out.println("Error");            // shouldn't reach here on current network
                         }
 
                         break;

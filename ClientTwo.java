@@ -50,9 +50,10 @@ public class ClientTwo
             System.out.println(response + " Responding to client.");
 
             byte[] toClient = response.getBytes();
-            DatagramPacket toC = new DatagramPacket(toClient, toClient.length);
+            DatagramPacket toC = new DatagramPacket(toClient, toClient.length);     // sending ack back to forwarder
             toC.setSocketAddress(packet.getSocketAddress());
             socket.send(toC);
+            socket.close();
         }   catch (SocketTimeoutException e)
         {
             System.out.println("Timeout occurred. Withdrawal wanted.");

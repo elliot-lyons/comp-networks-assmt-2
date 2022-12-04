@@ -49,10 +49,11 @@ public class ClientThree
                 String response = "$" + value + " withdrawn. New balance: $" + bal + ".";
                 System.out.println(response + " Responding to client.");
 
-                byte[] toClient = response.getBytes();
+                byte[] toClient = response.getBytes();      // sednding ack to forwarder
                 DatagramPacket toC = new DatagramPacket(toClient, toClient.length);
                 toC.setSocketAddress(packet.getSocketAddress());
                 socket.send(toC);
+                socket.close();
                 
         } catch (SocketTimeoutException e)
         {
